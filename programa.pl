@@ -1,10 +1,10 @@
-% Aquí va el código.
+    % Aquí va el código.
 
 /*------------------------------------------------------Parcial Hogwarts------------------------------------------------------*/
 
 %============================= Parte 1-Sombrero Seleccionador =============================
 
-% persona/4 -> Mago,Sangre,Caract,OdiaCasa
+% persona/4 -> Mago,Sangre,Caract,noOdiaCasa
 persona(harry,mestiza,[corajudo,amistoso,orgulloso,inteligente],[gryffindor,ravenclaw,hufflepuff]).
 persona(draco,pura,[inteligente,orgulloso],[griffindor,ravenclaw,slytherin]).
 persona(hermione,impura,[inteligente,orgulloso,responsable],[]).
@@ -12,11 +12,11 @@ persona(hermione,impura,[inteligente,orgulloso,responsable],[]).
 % caractCasas/2-> Mago,Casa
 caractCasas(Mago,gryffindor):-
     persona(Mago,_,Caract,_),
-    member(coraje,Caract).
+    member(corajudo,Caract).
 
 caractCasas(Mago,slytherin):-
     persona(Mago,_,Caract,_),
-    member(orgullo,Caract),
+    member(orgulloso,Caract),
     member(inteligente,Caract).
 
 caractCasas(Mago,ravenclaw):-
@@ -30,7 +30,15 @@ caractCasas(Mago,hufflepuff):-
 
 % Punto 1
 % permiteEntrar/2 -> Mago, Casa
-permiteEntrar(Mago,Casa):-
+permiteEntrar(Mago,ravenclaw):-
+    persona(Mago,_,_,_),
+    caractCasas(Mago,Casa).
+
+permiteEntrar(Mago,gryffindor):-
+    persona(Mago,_,_,_),
+    caractCasas(Mago,Casa).
+
+permiteEntrar(Mago,hufflepuff):-
     persona(Mago,_,_,_),
     caractCasas(Mago,Casa).
 
@@ -46,10 +54,10 @@ tieneCaracterApropiado(Mago,Casa):-
 % Punto 3
 % puedeQuedarSeleccionado/2 -> Mago,Casa
 puedeQuedarSeleccionado(Mago,Casa):-
-    persona(Mago,_,_,OdiaCasa),
+    persona(Mago,_,_,NoOdiaCasa),
     permiteEntrar(Mago,Casa),
     tieneCaracterApropiado(Mago,Casa),
-    not(member(Casa,OdiaACasa)).
+    member(Casa,NoOdiaCasa).
 
 puedeQuedarSeleccionado(hermione,gryffindor).
 
@@ -70,13 +78,14 @@ puedenEnMismaCasa(Mago1,Mago2):-
 %============================= Parte 2-La Copa de las Casas =============================
 
 % acciones/2 -> Accion,Puntaje
-acciones(fueraDeCama,-50).
-acciones(irBosque,-50).
-acciones(seccionRestringidaBiblioteca,-10).
-acciones(tercerPiso,-75).
-acciones(ganarPartidaAjedrez,50).
-acciones(salvarAmigos,50).
-acciones(derrotarVoldemort,60).
+accion(fueraDeCama,(-50)).
+accion(irBosque,(-50)).
+accion(seccionRestringidaBiblioteca,(-10)).
+accion(tercerPiso,(-75)).
+accion(ganarPartidaAjedrez,50).
+accion(salvarAmigos,50).
+accion(derrotarVoldemort,60).
+accion(irMazmorras,15).
 
 % magoHizo/2 -> Mago, Accion
 magoHizo(harry,fueraDeCama).
@@ -101,12 +110,11 @@ esDe(luna, ravenclaw).
 
 % buenMago/1 -> Mago
 buenMago(Mago):-
-    magoHizo(Mago,Accion),
-    not(malaAccion(Accion)).
+    forall(magoHizo(Mago,Accion),not(malaAccion(Accion))).
 
 % malaAccion/1 -> Accion
 malaAccion(Accion):-
-    acciones(Accion,Puntaje),
+    accion(Accion,Puntaje),
     Puntaje<0.
 
 % accionRecurrente/1 -> Accion
@@ -117,11 +125,48 @@ accionRecurrente(Accion):-
 
 %Punto 2
 
-puntajeTotalDeCasa(Casa):-
-    esDe(Mago,Casa),
+% puntos/3 -> Mago,Accion,Puntos
+puntos(Mago,Accion,Puntos):-
     magoHizo(Mago,Accion),
-    findAll(Puntaje,acciones(Accion,Puntaje),Puntajes),
-    sumList(Puntajes,CantPuntos).
+    accion(Accion,P),
+    Puntos is P.
+
+% puntajeMago/2 -> Casa,Puntos
+puntajeDeCasaPorMago(Casa,PuntosTotales):-
+    esDe(Mago,Casa),
+    findall(Puntos,puntos(Mago,Accion,Puntos),Lista),
+    sumlist(Lista,PuntosTotales).
+
+% puntajeTotalDeCasa/2 -> Casa,PuntosTotales
+puntajeTotalDeCasa(Casa,Puntos):-
+    puntajeDeCasaPorMago(Casa,PuntosTotales),
+    findall(Puntos,puntajeDeCasaPorMago(Casa,Puntos),Lista),
+    sumlist(Lista,Puntos).
 
 
+% Punto 3
+% casaGanadora/1 -> Casa
+casaGanadora(Ganador):-
+    esDe(_,Ganador),
+    puntajeTotalDeCasa(Ganador,Puntos1),
+    forall(puntajeTotalDeCasa(_,Puntos2),Puntos1>=Puntos2).
 
+% Punto 4
+
+magoHizo(hermione,pregunta(encuentraBezoar,20,snape)).
+magoHizo(hermione,pregunta(levitarPluma,25,flitwick)).
+
+puntos(Mago,Puntos):-
+    magoHizo(Mago,pregunta(_,P,Profesor)),
+    Profesor = snape,
+    Puntos is P/2.
+
+puntos(Mago,Puntos):-
+    magoHizo(Mago,pregunta(_,P,Profesor)),
+    Profesor \= snape,
+    Puntos is P.
+
+puntajeDeCasaPorMago(Casa,PuntosTotales):-
+    esDe(Mago,Casa),
+    findall(Puntos,puntos(Mago,Puntos),Lista),
+    sumlist(Lista,PuntosTotales).
