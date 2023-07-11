@@ -170,3 +170,115 @@ puntajeDeCasaPorMago(Casa,PuntosTotales):-
     esDe(Mago,Casa),
     findall(Puntos,puntos(Mago,Puntos),Lista),
     sumlist(Lista,PuntosTotales).
+
+
+/*------------------------------------------------------Parcial Influencers------------------------------------------------------*/
+
+% Punto 1
+tieneCanal(ana,youtube,3000000).
+tieneCanal(ana,instagram,2700000).
+tieneCanal(ana,tiktok,1000000).
+tieneCanal(ana,twitch,2).
+tieneCanal(beto,twitch,120000).
+tieneCanal(beto,youtube,6000000).
+tieneCanal(beto,instagram,1100000).
+tieneCanal(cami,tiktok,2000).
+tieneCanal(dani,youtube,1000000).
+tieneCanal(evelyn,instagram,1).
+
+% Punto 2
+
+% Punto 2.a
+influencer(Persona):-
+    tieneCanal(Persona,_,_),
+    findall(Seguidores,tieneCanal(Persona,_,Seguidores),Lista),
+    sumlist(Lista,SeguidoresTotales),
+    SeguidoresTotales>10000.
+
+% Punto 2.b
+
+omnipresente(Persona):-
+    tieneCanal(Persona,Red,_),
+    forall(tieneCanal(_,Red,_),tieneCanal(Persona,Red,_)).
+
+% Punto 2.c
+
+exclusivo(Persona):-
+    tieneCanal(Persona,_,_),
+    findall(Red,tieneCanal(Persona,Red,_),Lista),
+    length(Lista,Cantidad),
+    Cantidad=<1.
+
+% Punto 3
+
+% Punto 3.a
+
+%subio/4 ->Persona,Red,Archivo,caract()
+subio(ana,tiktok,video,caract(1,[beto,evelyn])).
+subio(ana,tiktok,video,caract(1,[ana])).
+subio(ana,instagram,foto,caract([ana])).
+subio(beto,instagram,foto,caract([])).
+subio(cami,twitch,stream,caract(lol)).
+subio(cami,youtube,video,caract(5,[cami])).
+subio(evelyn,instagram,foto,caract([evelyn,cami])).
+
+% Punto 3.b
+
+esJuego(lol).
+esJuego(minecraft).
+esJuego(aoe).
+
+% Punto 4
+
+contenidoAdictivo(Red):-
+    subio(_,Red,video,caract(Duracion,_)),
+    Duracion<3.
+
+contenidoAdictivo(Red):-
+    subio(_,Red,stream,caract(Contenido)),
+    esJuego(Contenido).
+
+contenidoAdictivo(Red):-
+    subio(_,Red,foto,caract(Participantes)),
+    length(Participantes,Cantidad),
+    Cantidad<4.
+
+adictiva(Red):-
+    subio(_,Red,_,_),
+    contenidoAdictivo(Red).
+
+% Punto 5
+
+colaboran(Persona1,Persona2):-
+    subio(Persona2,_,_,caract(_,Participantes)),
+    subio(Persona1,_,_,_),
+    Persona1\=Persona2,
+    member(Persona1,Participantes).
+
+colaboran(Persona1,Persona2):-
+    subio(Persona2,_,_,caract(Participantes)),
+    subio(Persona1,_,_,_),
+    Persona1\=Persona2,
+    member(Persona1,Participantes).
+
+% Punto 6
+
+caminoALaFama(Persona):-
+    not(influencer(Persona)),
+    colaboran(Persona,Persona2),
+    influencer(Persona2).
+
+caminoALaFama(Persona):-
+    not(influencer(Persona)),
+    colaboran(Persona,Persona2),
+    caminoALaFama(Persona2).
+
+% Punto 7
+
+/* 7.b Simplemente no habia que escribir la relacion tieneCanal(beto,tiktok,1100000). , 
+       ya que si no aparece en el enunciado que beto tiene tiktok, por universo cerrado no pertenece a nuestra base de conocimiento*/
+
+
+/*------------------------------------------------------Parcial Alquimia------------------------------------------------------*/
+
+
