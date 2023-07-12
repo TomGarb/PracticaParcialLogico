@@ -289,3 +289,85 @@ herramienta(cata, libro(vida)).
 herramienta(cata, circulo(100,5)).
 
 % Punto 1
+
+/*----------------------------------------------------Parcial de la comision de los martes-------------------------------------*/
+
+restaurante(panchoMayo, 2, barracas).
+restaurante(finoli, 3, villaCrespo).
+restaurante(superFinoli, 5, villaCrespo).
+
+menu(panchoMayo, carta(1000, pancho)).
+menu(panchoMayo, carta(200, hamburguesa)).
+menu(finoli, carta(2000, hamburguesa)).
+menu(finoli, pasos(15, 15000, [chateauMessi, francescoliSangiovese, susanaBalboaMalbec], 6)).
+menu(noTanFinoli, pasos(2, 3000, [guinoPin, juanaDama],3)).
+
+vino( chateauMessi, francia, 5000).
+vino( francescoliSangiovese, italia, 1000).
+vino( susanaBalboaMalbec, argentina, 1200).
+vino( christineLagardeCabernet, argentina, 5200).
+vino( guinoPin, argentina, 500).
+vino( juanaDama, argentina, 1000).
+
+
+% Punto 1
+
+masDeNEstrellasPorBarrio(Restaurant,EstrellasMin,Barrio):-
+    restaurante(Restaurant,_,Barrio),
+    forall(restaurante(Restaurant,Estrellas,_),EstrellasMin=<Estrellas).
+
+% Punto 2
+
+% Restaurante de prueba
+restaurante(laVacaLoca,0,villaDevoto).
+
+restauranteSinEstrellas(Restaurant):-
+    restaurante(Restaurant,Estrellas,_),
+    Estrellas = 0 .
+
+% Punto 3
+
+malOrganizado(Restaurant):-
+    restaurante(Restaurant,_,_),
+    menu(Restaurant,pasos(Pasos,_,ListaVinos,_)),
+    length(ListaVinos,Cantidad),
+    Pasos>Cantidad.
+
+malOrganizado(Restaurant):-
+    restaurante(Restaurant,_,_),
+    menu(Restaurant,carta(Precio,Comida)),
+    menu(Restaurant,carta(OtroPrecio,Comida)),
+    OtroPrecio\=Precio.
+
+% Punto 4
+
+copiaBarata(Restaurant,CopiaRestaurant):-
+    restaurante(Restaurant,Estrellas,_),
+    restaurante(CopiaRestaurant,EstrellasCopia,_),
+    menu(Restaurant,carta(Precio,Comida)),
+    menu(CopiaRestaurant,carta(PrecioCopia,Comida)),
+    PrecioCopia<Precio,
+    EstrellasCopia<Estrellas.
+
+% Punto 5
+
+precioPromedio(Restaurant,Promedio):-
+    restaurante(Restaurant,_,_),
+    findall(Precio,menu(Restaurant,carta(Precio,_)),ListaPrecios),
+    sumlist(ListaPrecios,Suma),
+    Promedio is (Suma/2).
+
+precioPromedio(Restaurant,Promedio):-
+    restaurante(Restaurant,_,_),
+    menu(Restaurant,pasos(_,Precio,ListaVinos,Comensales)),
+    precioVinos(ListaVinos,PreciosVinos),
+    Promedio is ((Precio+PreciosVinos)/Comensales).
+
+precioVinos([Vino],PrecioVinos):-
+    vino(Vino,_,Precio),
+    PreciosVinos is (PreciosVinos+Precio).
+
+precioVinos([Vino|Vinos],PreciosVinos):-
+    vino(Vino,_,Precio),
+    PreciosVinos is (PreciosVinos+Precio),
+    precioVinos([Vinos],PreciosVinos).
