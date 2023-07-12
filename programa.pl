@@ -352,21 +352,16 @@ copiaBarata(Restaurant,CopiaRestaurant):-
 % Punto 5
 
 precioPromedio(Restaurant,Promedio):-
-    restaurante(Restaurant,_,_),
     findall(Precio,menu(Restaurant,carta(Precio,_)),ListaPrecios),
     sumlist(ListaPrecios,Suma),
     Promedio is (Suma/2).
 
 precioPromedio(Restaurant,Promedio):-
-    restaurante(Restaurant,_,_),
     menu(Restaurant,pasos(_,Precio,ListaVinos,Comensales)),
     precioVinos(ListaVinos,PreciosVinos),
     Promedio is ((Precio+PreciosVinos)/Comensales).
 
-precioVinos([Vino],PrecioVinos):-
-    vino(Vino,_,Precio),
-    PreciosVinos is (PreciosVinos+Precio).
-
+precioVinos([],_).
 precioVinos([Vino|Vinos],PreciosVinos):-
     vino(Vino,_,Precio),
     PreciosVinos is (PreciosVinos+Precio),
