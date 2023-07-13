@@ -351,18 +351,31 @@ copiaBarata(Restaurant,CopiaRestaurant):-
 
 % Punto 5
 
-precioPromedio(Restaurant,Promedio):-
+precioPromedioTotal(Restaurant,Promedio):-
+    precioPromedioCarta(Restaurant,PromCarta),
+    findall(PromPasos,precioPromedioPasos(Restaurant,PromPasos),PromedioPasos),
+    length(PromedioPasos,CantidadPasos),
+    sumlist(PromedioPasos,PromPasos2),
+    Promedio is (PromCarta+PromPasos2)/(1+CantidadPasos).
+
+precioPromedioCarta(Restaurant,Promedio):-
     findall(Precio,menu(Restaurant,carta(Precio,_)),ListaPrecios),
     sumlist(ListaPrecios,Suma),
     Promedio is (Suma/2).
 
-precioPromedio(Restaurant,Promedio):-
+precioPromedioPasos(Restaurant,Promedio):-
     menu(Restaurant,pasos(_,Precio,ListaVinos,Comensales)),
-    precioVinos(ListaVinos,PreciosVinos),
-    Promedio is ((Precio+PreciosVinos)/Comensales).
+    findall(Cuanto,(member(Vino,Vinos),precioVino(Vino,Cuanto)),ListaPrecios),
+    sumlist(ListaPrecios,Total),
+    Promedio is ((Precio+Total)/Comensales).
 
-precioVinos([],_).
-precioVinos([Vino|Vinos],PreciosVinos):-
-    vino(Vino,_,Precio),
-    PreciosVinos is (PreciosVinos+Precio),
-    precioVinos([Vinos],PreciosVinos).
+
+precioVino(Vino,Precio):-
+    vino(Vino,Pais,PrecioIndividual),
+    Pais\=argentina,
+    Precio is (PrecioIndividual*(1.35)).
+
+precioVino(Vino,Precio):-
+    vino(Vino,Pais,PrecioIndividual),
+    Pais = argentina,
+    Precio is PrecioIndividual.
