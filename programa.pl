@@ -290,6 +290,90 @@ herramienta(cata, circulo(100,5)).
 
 % Punto 1
 
+jugadores(ana,agua).
+jugadores(ana,vapor).
+jugadores(ana,tierra).
+jugadores(ana,hierro).
+jugadores(beto,Elemento):-
+    jugadores(ana,Elemento).
+jugadores(cata,fuego).
+jugadores(cata,tierra).
+jugadores(cata,agua).
+jugadores(cata,aire).
+
+construccionDe(pasto,[agua,tierra]).
+construccionDe(huesos,[pasto,agua]).
+construccionDe(presion,[hierro,vapor]).
+construccionDe(vapor,[agua,fuego]).
+construccionDe(playstation,[silicio,hierro,plastico]).
+construccionDe(silicio,[tierra]).
+construccionDe(plastico,[huesos,presion]).
+
+% Punto 2
+
+tieneIngredientesPara(Persona,Elemento):-
+    jugadores(Persona,_),
+    construccionDe(Elemento,_),
+    forall(necesita(Elemento,Ingrediente),jugadores(Persona,Ingrediente)).
+
+necesita(Elemento,Ingrediente):-
+    construccionDe(Elemento,Ingredientes),
+    member(Ingrediente,Ingredientes).
+
+% Punto 3
+estaVivo(fuego).
+estaVivo(agua).
+estaVivo(Elemento):-
+    necesita(Elemento,Ingrediente),
+    estaVivo(Ingrediente).
+
+% Punto 4
+
+puedeConstruir(Persona,Elemento):-
+    tieneIngredientesPara(Persona,Elemento),
+    tieneHerramientasPara(Persona,Elemento).
+
+tieneHerramientasPara(Persona,Elemento):-
+    herramienta(Persona,Herramienta),
+    sirvePara(Herramienta,Elemento).
+
+sirvePara(libro(vida),Elemento):-
+    estaVivo(Elemento).
+sirvePara(libro(inerte),Elemento):-
+    not(estaVivo(Elemento)).
+sirvePara(Herramienta,Elemento):-
+    cantidadQueSoporta(Herramienta,Soporte),
+    cantidadQueNecesita(Elemento,Necesario),
+    Soporte>=Necesario.
+
+cantidadQueSoporta(cuchara(cms),Soporte):-
+    Soporte is cms/10.
+cantidadQueSoporta(circulo(cms,niveles),Soporte):-
+    Soporte is (cms/100)*niveles.
+
+cantidadQueNecesita(Elemento,Necesario):-
+    construccionDe(Elemento,Ingredientes),
+    length(Ingredientes,Necesario).
+
+% Punto 5
+
+primitivo(agua).
+primitivo(fuego).
+primitivo(tierra).
+primitivo(aire).
+
+todoPoderoso(Persona):-
+    jugadores(Persona,Elemento),
+    forall(jugadores(Persona,Elemento),primitivo(Elemento)).
+
+% Punto 6
+
+quienGana(Persona,Cantidad):-   
+    jugadores(Persona,_),
+    findall(Elemento,distinct(Elemento,puedeConstruir(Persona,Elemento)),Elementos),
+    length(Elementos,Cantidad).
+
+
 /*----------------------------------------------------Parcial Restaurant-------------------------------------------------------*/
 
 restaurante(panchoMayo, 2, barracas).
