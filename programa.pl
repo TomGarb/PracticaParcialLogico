@@ -290,7 +290,7 @@ herramienta(cata, circulo(100,5)).
 
 % Punto 1
 
-/*----------------------------------------------------Parcial de la comision de los martes-------------------------------------*/
+/*----------------------------------------------------Parcial Restaurant-------------------------------------------------------*/
 
 restaurante(panchoMayo, 2, barracas).
 restaurante(finoli, 3, villaCrespo).
@@ -302,12 +302,12 @@ menu(finoli, carta(2000, hamburguesa)).
 menu(finoli, pasos(15, 15000, [chateauMessi, francescoliSangiovese, susanaBalboaMalbec], 6)).
 menu(noTanFinoli, pasos(2, 3000, [guinoPin, juanaDama],3)).
 
-vino( chateauMessi, francia, 5000).
-vino( francescoliSangiovese, italia, 1000).
-vino( susanaBalboaMalbec, argentina, 1200).
-vino( christineLagardeCabernet, argentina, 5200).
-vino( guinoPin, argentina, 500).
-vino( juanaDama, argentina, 1000).
+vino(chateauMessi, francia, 5000).
+vino(francescoliSangiovese, italia, 1000).
+vino(susanaBalboaMalbec, argentina, 1200).
+vino(christineLagardeCabernet, argentina, 5200).
+vino(guinoPin, argentina, 500).
+vino(juanaDama, argentina, 1000).
 
 
 % Punto 1
@@ -379,3 +379,138 @@ precioVino(Vino,Precio):-
     vino(Vino,Pais,PrecioIndividual),
     Pais = argentina,
     Precio is PrecioIndividual.
+
+
+/*-------------------------------------------------Parcial 31 minutos-----------------------------------------------------*/
+
+cancion(bailanSinCesar, [pabloIlabaca, rodrigoSalinas], 10600177).
+cancion(yoOpino, [alvaroDiaz, carlosEspinoza, rodrigoSalinas], 5209110).
+cancion(equilibrioEspiritual, [danielCastro, alvaroDiaz, pabloIlabaca, pedroPeirano, rodrigoSalinas], 12052254).
+cancion(tangananicaTanganana, [danielCastro, pabloIlabaca, pedroPeirano], 5516191).
+cancion(dienteBlanco, [danielCastro, pabloIlabaca, pedroPeirano], 5872927). 
+cancion(lala, [pabloIlabaca, pedroPeirano], 5100530).
+%Revisa el archivo del repo, que este hecho estaba con un argumento de más.
+cancion(meCortaronMalElPelo, [danielCastro, alvaroDiaz, pabloIlabaca, rodrigoSalinas], 3428854).
+
+% Mes, Puesto, Cancion
+rankingTop3(febrero, 1, lala).
+rankingTop3(febrero, 2, tangananicaTanganana).
+rankingTop3(febrero, 3, meCortaronMalElPelo).
+rankingTop3(marzo, 1, meCortaronMalElPelo).
+rankingTop3(marzo, 2, tangananicaTanganana).
+rankingTop3(marzo, 3, lala).
+rankingTop3(abril, 1, meCortaronMalElPelo).
+rankingTop3(abril, 2, dienteBlanco).
+rankingTop3(abril, 3, equilibrioEspiritual).
+rankingTop3(mayo, 1, meCortaronMalElPelo).
+rankingTop3(mayo, 2, dienteBlanco).
+rankingTop3(mayo, 3, equilibrioEspiritual).
+rankingTop3(junio, 1, dienteBlanco).
+rankingTop3(junio, 2, tangananicaTanganana).
+rankingTop3(junio, 3, meCortaronMalElPelo).
+
+
+
+%%%%%%% INSERTE SOLUCIÓN AQUI %%%%%%%
+
+% ¡Éxitos! :)
+
+/*=====================================Punto 1=====================================*/
+/*Saber si una cancion es un hit, lo cual ocurre si aparece en el ranking top 3 de todos los meses*/
+
+esUnHit(Cancion):-
+    cancion(Cancion,_,_),
+    rankingTop3(Mes,_,_),
+    forall(rankingTop3(Mes,_,_),rankingTop3(Mes,_,Cancion)).
+
+/*=====================================Punto 2=====================================*/
+/*Saber si una cancion no es reconocida por los criticos, lo cual ocurre si tiene muchas reproducciones y nunca estuvo en el ranking.
+Una cancion tiene muchas reproducciones si tiene mas de 7000000 reproducciones*/
+
+noEsReconocidaPorLosCriticos(Cancion):-
+    cancion(Cancion,_,Reproducciones),
+    Reproducciones>7000000,
+    not(rankingTop3(_,_,Cancion)).
+
+/*===================================== Punto 3 =====================================*/
+/*Saber si dos compositores son colaboradores, lo cual ocurre si compusieron alguna cancion juntos*/
+
+sonColaboradores(Artista,Compositor):-
+    cancion(Cancion,Artistas,_),
+    member(Artista,Artistas),
+    member(Compositor,Artistas),
+    Artista\=Compositor.
+
+/*===================================== Punto 4 =====================================*/
+/*Modelar en la solucion a los siguientes trabajadores:
+    Tulio, conductor con 5 años de experiencia
+    Bodoque, periodista con 5 años de experiencia con un titulo de licenciatura, y tambiuen reportero con 5 años de experiencia y 300 notas realizadas
+    Mario Hugo, periodista con 10 añños de experencia con un posgrado
+    Juanin, conductor que recien empieza asi que no tiene años de experiencia*/
+
+trabajador(tulio,trabajo(conductor,5)).
+trabajador(bodoque,trabajo(periodista,5,licenciatura)).
+trabajador(bodoque,trabajo(reportero,5,300)).
+trabajador(marioHugo,trabajo(periodista,10,posgrado)).
+trabajador(juanin,trabajo(conductor,0)).
+
+/*=================================== Punto 5 =====================================*/
+/*  Conocer el sueldo total de una persona, el cual esta dado ppor la suma de los sueldos de cada uno de sus trabajos. El sueldo de cada trabajo se calcula de la siguiente forma:
+    El sueldo de un conductor es de 10000 por cadad año de experiencia
+    El sueldo de un reportero tambien es 10000 por cada año de experiencia mas 100 por cada nota que haya hecho en su carrera
+    El sueldo de los periodistas, por cada año de experiecia reciben 5000, pero se les aplica un porcentaje de incremento del 20% cuando tienen una licenciatura
+        o del 35% si tiene un posgrado
+*/ 
+
+sueldosTrabajos(conductor,10000).
+sueldosTrabajos(reportero,10000,100).
+sueldosTrabajos(periodista,5000).
+
+aumentoSegunTitulo(posgrado,1.35).
+aumentoSegunTitulo(licenciatura,1.20).
+
+sueldoTotal(Persona,SueldoTotal):-
+    trabajador(Persona,_),
+    findall(Sueldo,sueldoSegunTrabajo(Persona,Sueldo),Sueldos),
+    sum_list(Sueldos, SueldoTotal).
+
+sueldoSegunTrabajo(Persona,Sueldo):-
+    trabajador(Persona,trabajo(conductor,Anios)),
+    sueldosTrabajos(conductor,MontoAnios),
+    Sueldo is (Anios*MontoAnios).
+
+sueldoSegunTrabajo(Persona,Sueldo):-
+    trabajador(Persona,trabajo(reportero,Anios,Notas)),
+    sueldosTrabajos(reportero,MontoAnios,MontoNotas),
+    Sueldo is ((Anios*MontoAnios)+(Notas*MontoNotas)).
+
+sueldoSegunTrabajo(Persona,Sueldo):-
+    trabajador(Persona,trabajo(periodista,Anios,Titulo)),
+    sueldosTrabajos(periodista,MontoAnios),
+    aumentoSegunTitulo(Titulo,MontoRecargo),
+    Sueldo is (MontoAnios*Anios)*MontoRecargo.
+
+/*=================================== Punto 6 =====================================*/
+/*Agregar un nuevo trabajador que tenga otro tipo de trabajo nuevo, distinto a los anteriores.
+Agregar una forma de calcular el sueldo para el nuevo trabajo agregado
+¿Que concepto de la materia se puede relacionar a esto?*/
+
+trabajador(juanito,trabajo(limpieza,10,noche,5)).
+
+/*Juanito es un encargado de la limpieza con 10 años de experiencia y que trabaja en el turno noche y limpia 5 baños en su turno*/
+
+sueldosTrabajos(limpieza,5000).
+
+dificultadTurno(manana,2).
+dificultadTurno(tarde,3).
+dificultadTurno(noche,5).
+
+/*El sueldo consiste en 5000 por, año de experiencia mas la cantidad de baños que limpia por la dificultad del turno*/
+    
+sueldoSegunTrabajo(Persona,Sueldo):-
+    trabajador(Persona,trabajo(limpieza,Anios,Turno,Banios)),
+    sueldosTrabajos(limpieza,MontoAnios),
+    dificultadTurno(Turno,Dificultad),
+    Sueldo is MontoAnios*(Anios+(Banios*Dificultad)).
+
+/*El concepto visto en clase que hace que podamos lograr lo anterior, sin tener que modificar el codigo del punto 5, es el de polimorfismo*/
