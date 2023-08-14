@@ -598,3 +598,6 @@ sueldoSegunTrabajo(Persona,Sueldo):-
     Sueldo is MontoAnios*(Anios+(Banios*Dificultad)).
 
 /*El concepto visto en clase que hace que podamos lograr lo anterior, sin tener que modificar el codigo del punto 5, es el de polimorfismo*/
+
+
+/*-----------------------------------------------Parcial Rally Dakar------------------------------------------------------------*/
