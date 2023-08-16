@@ -467,6 +467,7 @@ precioVino(Vino,Precio):-
 
 /*-------------------------------------------------Parcial 31 minutos-----------------------------------------------------*/
 
+/*
 cancion(bailanSinCesar, [pabloIlabaca, rodrigoSalinas], 10600177).
 cancion(yoOpino, [alvaroDiaz, carlosEspinoza, rodrigoSalinas], 5209110).
 cancion(equilibrioEspiritual, [danielCastro, alvaroDiaz, pabloIlabaca, pedroPeirano, rodrigoSalinas], 12052254).
@@ -501,7 +502,7 @@ rankingTop3(junio, 3, meCortaronMalElPelo).
 
 /*=====================================Punto 1=====================================*/
 /*Saber si una cancion es un hit, lo cual ocurre si aparece en el ranking top 3 de todos los meses*/
-
+/*
 esUnHit(Cancion):-
     cancion(Cancion,_,_),
     rankingTop3(Mes,_,_),
@@ -510,7 +511,7 @@ esUnHit(Cancion):-
 /*=====================================Punto 2=====================================*/
 /*Saber si una cancion no es reconocida por los criticos, lo cual ocurre si tiene muchas reproducciones y nunca estuvo en el ranking.
 Una cancion tiene muchas reproducciones si tiene mas de 7000000 reproducciones*/
-
+/*
 noEsReconocidaPorLosCriticos(Cancion):-
     cancion(Cancion,_,Reproducciones),
     Reproducciones>7000000,
@@ -518,7 +519,7 @@ noEsReconocidaPorLosCriticos(Cancion):-
 
 /*===================================== Punto 3 =====================================*/
 /*Saber si dos compositores son colaboradores, lo cual ocurre si compusieron alguna cancion juntos*/
-
+/*
 sonColaboradores(Artista,Compositor):-
     cancion(Cancion,Artistas,_),
     member(Artista,Artistas),
@@ -531,7 +532,7 @@ sonColaboradores(Artista,Compositor):-
     Bodoque, periodista con 5 años de experiencia con un titulo de licenciatura, y tambiuen reportero con 5 años de experiencia y 300 notas realizadas
     Mario Hugo, periodista con 10 añños de experencia con un posgrado
     Juanin, conductor que recien empieza asi que no tiene años de experiencia*/
-
+/*
 trabajador(tulio,trabajo(conductor,5)).
 trabajador(bodoque,trabajo(periodista,5,licenciatura)).
 trabajador(bodoque,trabajo(reportero,5,300)).
@@ -546,6 +547,7 @@ trabajador(juanin,trabajo(conductor,0)).
         o del 35% si tiene un posgrado
 */ 
 
+/*
 sueldosTrabajos(conductor,10000).
 sueldosTrabajos(reportero,10000,100).
 sueldosTrabajos(periodista,5000).
@@ -578,11 +580,11 @@ sueldoSegunTrabajo(Persona,Sueldo):-
 /*Agregar un nuevo trabajador que tenga otro tipo de trabajo nuevo, distinto a los anteriores.
 Agregar una forma de calcular el sueldo para el nuevo trabajo agregado
 ¿Que concepto de la materia se puede relacionar a esto?*/
-
+/*
 trabajador(juanito,trabajo(limpieza,10,noche,5)).
 
 /*Juanito es un encargado de la limpieza con 10 años de experiencia y que trabaja en el turno noche y limpia 5 baños en su turno*/
-
+/*
 sueldosTrabajos(limpieza,5000).
 
 dificultadTurno(manana,2).
@@ -590,7 +592,7 @@ dificultadTurno(tarde,3).
 dificultadTurno(noche,5).
 
 /*El sueldo consiste en 5000 por, año de experiencia mas la cantidad de baños que limpia por la dificultad del turno*/
-    
+    /*
 sueldoSegunTrabajo(Persona,Sueldo):-
     trabajador(Persona,trabajo(limpieza,Anios,Turno,Banios)),
     sueldosTrabajos(limpieza,MontoAnios),
@@ -599,5 +601,266 @@ sueldoSegunTrabajo(Persona,Sueldo):-
 
 /*El concepto visto en clase que hace que podamos lograr lo anterior, sin tener que modificar el codigo del punto 5, es el de polimorfismo*/
 
+*/
 
 /*-----------------------------------------------Parcial Rally Dakar------------------------------------------------------------*/
+
+/*
+auto(modelo)
+moto(anioDeFabricacion, suspensionesExtras)
+camion(items)
+cuatri(marca)
+*/
+
+% ganador/3 -> Anio Corredor Vehiculo
+ganador(1997,peterhansel,moto(1995, 1)).
+ganador(1998,peterhansel,moto(1998, 1)).
+ganador(2010,sainz,auto(touareg)).
+ganador(2010,depress,moto(2009, 2)).
+ganador(2010,karibov,camion([vodka, mate])).
+ganador(2010,patronelli,cuatri(yamaha)).
+ganador(2011,principeCatar,auto(touareg)).
+ganador(2011,coma,moto(2011, 2)).
+ganador(2011,chagin,camion([repuestos, mate])).
+ganador(2011,patronelli,cuatri(yamaha)).
+ganador(2012,peterhansel,auto(countryman)).
+ganador(2012,depress,moto(2011, 2)).
+ganador(2012,deRooy,camion([vodka, bebidas])).
+ganador(2012,patronelli,cuatri(yamaha)).
+ganador(2013,peterhansel,auto(countryman)).
+ganador(2013,depress,moto(2011, 2)).
+ganador(2013,nikolaev,camion([vodka, bebidas])).
+ganador(2013,patronelli,cuatri(yamaha)).
+ganador(2014,coma,auto(countryman)).
+ganador(2014,coma,moto(2013, 3)).
+ganador(2014,karibov,camion([tanqueExtra])).
+ganador(2014,casale,cuatri(yamaha)).
+ganador(2015,principeCatar,auto(countryman)).
+ganador(2015,coma,moto(2013, 2)).
+ganador(2015,mardeev,camion([])).
+ganador(2015,sonic,cuatri(yamaha)).
+ganador(2016,peterhansel,auto(2008)).
+ganador(2016,prince,moto(2016, 2)).
+ganador(2016,deRooy,camion([vodka, mascota])).
+ganador(2016,patronelli,cuatri(yamaha)).
+ganador(2017,peterhansel,auto(3008)).
+ganador(2017,sunderland,moto(2016, 4)).
+ganador(2017,nikolaev,camion([ruedaExtra])).
+ganador(2017,karyakin,cuatri(yamaha)).
+ganador(2018,sainz,auto(3008)).
+ganador(2018,walkner,moto(2018, 3)).
+ganador(2018,nicolaev,camion([vodka, cama])).
+ganador(2018,casale,cuatri(yamaha)).
+ganador(2019,principeCatar,auto(hilux)).
+ganador(2019,prince,moto(2018, 2)).
+ganador(2019,nikolaev,camion([cama, mascota])).
+ganador(2019,cavigliasso,cuatri(yamaha)).
+
+
+% pais/2 -> Corredor Pais
+pais(peterhansel,francia).
+pais(sainz,espania).
+pais(depress,francia).
+pais(karibov,rusia).
+pais(patronelli,argentina).
+pais(principeCatar,catar).
+pais(coma,espania).
+pais(chagin,rusia).
+pais(deRooy,holanda).
+pais(nikolaev,rusia).
+pais(casale,chile).
+pais(mardeev,rusia).
+pais(sonic,polonia).
+pais(prince,australia).
+pais(sunderland,reinoUnido).
+pais(karyakin,rusia).
+pais(walkner,austria).
+pais(cavigliasso,argentina).
+
+
+% Punto 1
+% marcas/2 -> Marca, Modelo
+marcas(peugeot,2008).
+marcas(peugeot,3008).
+marcas(mini,countryman).
+marcas(volkswagen,touareg).
+marcas(toyota,hilux).
+
+/*para agregar el modelo buggy en mini, solamente debemos de colocar "marcas(mini,buggy)", y para el dkr simplemente no agregamos nada, ya que por universo cerrado no pertenece a nuestra
+base de reconocimiento*/
+
+% Punto 2
+
+ganadorReincidente(Corredor):-
+    ganador(Anio,Corredor,_),
+    ganador(Ani2,Corredor,_),
+    Anio\=Anio2.
+
+% Punto 3
+
+mismoPais(Corredor1,Corredor2):-
+    pais(Corredor1,Pais),
+    pais(Corredor2,Pais).
+
+inspiraA(Inspirador,Inspirado):-
+    not(ganador(_,Inspirado,_)),
+    ganador(_,Inspirador,_),
+    mismoPais(Inspirado,Inspirador).
+
+inspiraA(Inspirador,Inspirado):-
+    ganador(AnioInspirado,Inspirado,_),
+    ganador(AnioInpirador,Inspirador,_),
+    AnioInspirado>AnioInpirador,
+    mismoPais(Inspirado,Inspirador).
+
+% Punto 4
+
+marcaDeLaFortuna(Conductor,Marca):-
+    ganador(_,Conductor,Vehiculo),
+    obtenerMarca(Vehiculo,Marca),
+    not(ganoConOtraMarca(Conductor,Marca,Vehiculo)).
+
+ganoConOtraMarca(Conductor,Marca,Vehiculo):-
+    obtenerMarca(Vehiculo,Marca),
+    obtenerMarca(Vehiculo,OtraMarca),
+    Marca\=OtraMarca.
+
+
+obtenerMarca(auto(Modelo),Marca):-
+    marcas(Marca,Modelo).
+
+obtenerMarca(cuatri(Marca),Marca).
+
+obtenerMarca(moto(Anio,_),ktm):-
+    antesDe(2000,moto(Anio,_)).
+
+obtenerMarca(moto(Anio,_),yamaha):-
+    not(antesDe(2000,moto(Anio,_))).
+
+antesDe(Anio,moto(AnioFabri,_)):-
+    Anio>=AniosFabri.
+
+obtenerMarca(camion(Elementos),kamaz):-
+    tiene(vodka,Elementos).
+
+obtenerMarca(camion(Elementos),iveco):-
+    not(tiene(vodka,Elementos)).
+
+tiene(Elemento,Elementos):-
+    member(Elemento,Elementos).
+
+/*--------------------------------------------------------------------------Parcial re Hecho-----------------------------------------------------------*/
+
+% Punto 1
+
+% Cancion, Compositores,  Reproducciones
+cancion(bailanSinCesar, [pabloIlabaca, rodrigoSalinas], 10600177).
+cancion(yoOpino, [alvaroDiaz, carlosEspinoza, rodrigoSalinas], 5209110).
+cancion(equilibrioEspiritual, [danielCastro, alvaroDiaz, pabloIlabaca, pedroPeirano, rodrigoSalinas], 12052254).
+cancion(tangananicaTanganana, [danielCastro, pabloIlabaca, pedroPeirano], 5516191).
+cancion(dienteBlanco, [danielCastro, pabloIlabaca, pedroPeirano], 5872927). 
+
+cancion(lala, [pabloIlabaca, pedroPeirano], 5100530).
+%Revisa el archivo del repo, que este hecho estaba con un argumento de más.
+
+cancion(meCortaronMalElPelo, [danielCastro, alvaroDiaz, pabloIlabaca, rodrigoSalinas], 3428854).
+
+% Mes, Puesto, Cancion
+rankingTop3(febrero, 1, lala).
+rankingTop3(febrero, 2, tangananicaTanganana).
+rankingTop3(febrero, 3, meCortaronMalElPelo).
+rankingTop3(marzo, 1, meCortaronMalElPelo).
+rankingTop3(marzo, 2, tangananicaTanganana).
+rankingTop3(marzo, 3, lala).
+rankingTop3(abril, 1, tangananicaTanganana).
+rankingTop3(abril, 2, dienteBlanco).
+rankingTop3(abril, 3, equilibrioEspiritual).
+rankingTop3(mayo, 1, meCortaronMalElPelo).
+rankingTop3(mayo, 2, dienteBlanco).
+rankingTop3(mayo, 3, equilibrioEspiritual).
+rankingTop3(junio, 1, dienteBlanco).
+rankingTop3(junio, 2, tangananicaTanganana).
+rankingTop3(junio, 3, lala).
+
+% Punto 1
+
+esUnHit(Cancion):-
+    cancion(Cancion,_,_),
+    forAll(rankingTop3(Mes,_,_),rankingTop3(Mes,_,Cancion)).
+
+% Punto 2
+
+noEsReconocidaPorLosCriticos(Cancion):-
+    cancion(Cancion,_,Reproducciones),
+    not(rankingTop3(_,_,Cancion)),
+    Reproducciones>7000000.
+
+% Punto 3
+
+sonColaboradores(Artista,Colaborador):-
+    cancion(_,Compositores,_),
+    member(Artista,Compositores),
+    member(Colaborador,Compositores),
+    Artista\=Colaborador.
+
+% Punto 4
+
+trabajadores(tulio,trabajo(conductor,5)).
+trabajadores(bodoque,trabajo(periodista,2,licenciatura)).
+trabajadores(bodoque,trabajo(reportero,5,300)).
+trabajadores(marioHugo,trabajo(periodista,10,posgrado)).
+trabajadores(juanin,trabajo(conductor,0)).
+
+% Punto 5
+
+sueldoTrabajo(conductor,10000).
+sueldoTrabajo(periodista,5000).
+sueldoTrabajo(reportero,10000,100).
+
+incrementoPorEstudio(licenciatura,1.20).
+
+incrementoPorEstudio(posgrado,1.35).
+
+sueldoTotal(Trabajador,SueldoTotal):-
+    trabajadores(Trabajador,_),
+    findall(Sueldo,sueldosPorTrabajo(Trabajador,Sueldo),Sueldos).
+    sum_list(Sueldos,SueldoTotal).
+
+sueldosPorTrabajo(Trabajador,Sueldo):-
+    trabajadores(Trabajador,trabajo(conductor,Anios)),
+    sueldoTrabajo(conductor,MontoAnios),
+    Sueldo is Anios*MontoAnios.
+
+sueldosPorTrabajo(Trabajador,Sueldo):-
+    trabajadores(Trabajador,trabajo(reportero,Anios,Notas)),
+    sueldoTrabajo(reportero,MontoAnios,MontoNotas),
+    Sueldo is (MontoAnios*Anios)+(MontoNotas*Notas).
+
+sueldosPorTrabajo(Trabajador,Sueldo):-
+    trabajadores(Trabajador,trabajo(periodista,Anios,Titulo)),
+    sueldoTrabajo(periodista,MontoAnios),
+    calcularIncremento(Titulo,Incremento)
+    Sueldo is (MontoAnios*Anios)*Incremento.
+
+% Punto 6
+
+trabajadores(juanito,trabajo(camarografo,10,principal,50)).
+
+/*Juanito es un camarografo con 10 años de experiencia, utiliza la camara principal y realiza 50 zooms dramaticos por dia*/
+
+sueldoTrabajo(camarografo,5000,10).
+
+extraPorCamara(principal,5000).
+%Se pueden agregar mas tipos de camaras
+
+/*Cobra 5000 por cada año de experiencia, se le descuentan 10 de cada zoom dramatico y dependiendo el tipo de camara que maneje, se le suma un extra*/
+
+
+sueldosPorTrabajo(Trabajador,Sueldo):-
+    trabajadores(Trabajador,trabajo(camarografo,Anios,Camara,Zooms)),
+    extraPorCamara(Camara,Extra),
+    sueldoTrabajo(camarografo,MontoAnios,MontoZoom),
+    Sueldo is (MontoAnios*Anios)+(Extra)-(MontoZoom*Zooms).
+
+
+/*Se utiiliza el concepto de polimorfismo*/
